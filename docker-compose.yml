@@ -71,7 +71,8 @@ services:
       - msa-network
 
   eureka-service:
-    build: ./flight-reservation-server
+    image: jimey104/flight-reservation-server:latest   # ✅ 이미지 사용
+    container_name: eureka-service
     ports:
       - "8761:8761"
     depends_on:
@@ -80,7 +81,7 @@ services:
       - msa-network
 
   gateway:
-    build: ./flight-reservation-gateway
+    image: jimey104/flight-reservation-gateway:latest   # ✅ 이미지 사용
     ports:
       - "8443:8443"
     depends_on:
@@ -89,7 +90,7 @@ services:
       - msa-network
 
   user-service:
-    build: ./user-service
+    image: jimey104/user-service:latest                 # ✅ 이미지 사용
     ports:
       - "8081:8081"
     depends_on:
@@ -99,7 +100,7 @@ services:
       - msa-network
 
   reservation-service:
-    build: ./reservation-service
+    image: jimey104/reservation-service:latest          # ✅ 이미지 사용
     ports:
       - "8083:8083"
     depends_on:
@@ -109,10 +110,13 @@ services:
       - msa-network
 
   flight-service:
-    build: ./flight-service
+    image: jimey104/flight-service:latest               # ✅ 이미지 사용
     ports:
       - "8082:8082"
-    depends_on:        # ✅ 수정: elasticsearch가 건강해질 때까지 기다림
+    environment:
+#     - SPRING_CONFIG_LOCATION=classpath:/application.properties
+      - SPRING_PROFILES_ACTIVE=default
+    depends_on:
       elasticsearch:
         condition: service_healthy
       gateway:
